@@ -9,6 +9,12 @@ const requestCounter=new client.Counter({
   help: 'Total number of HTTP requests',
   labelNames: ['method', 'route', 'status_code']
 })
+
+const activeRequest= new client.Gauge({
+  name:"active_requests",
+  help:"Number of active request"
+
+})
 const requestDuration=new client.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
@@ -22,5 +28,6 @@ export {
     register,
     requestCounter,
     requestDuration,
+    activeRequest,
     client
 }
