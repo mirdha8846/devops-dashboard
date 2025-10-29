@@ -3,14 +3,8 @@ global:
   evaluation_interval: 5s
 
 scrape_configs:
-  # Your Node.js application metrics (running on host machine, not in Docker)11
   - job_name: 'nodejs-app'
     static_configs:
-      - targets: ['host.docker.internal:3002']  # For Windows/Mac Docker Desktop
-      # Alternative: Use 'localhost:3002' if above doesn't work
+      - targets: ['host.docker.internal:3002']  
     metrics_path: '/metrics'
     
-  # If you want to monitor Prometheus itself
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
