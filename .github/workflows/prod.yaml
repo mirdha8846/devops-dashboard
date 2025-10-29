@@ -32,15 +32,14 @@ jobs:
         env:
           PAT: ${{ secrets.PAT }}
         run: |
-          git clone https://github.com/mirdha8846/Git-ops.git
+          git clone https://${{ secrets.PAT }}@github.com/mirdha8846/Git-ops.git
           cd Git-ops/k8s
           sed -i "s|image: pankajmirdha/testing:.*|image: pankajmirdha/testing:${{ github.sha }}|" deployment.yaml
           git config user.name "GitHub Action Bot"
           git config user.email "actions@github.com"
-          git config --global url.https://${PAT}@github.com/.insteadOf https://github.com/              
           git add .
           git commit -m "update deployment config image tag to ${{ github.sha }}"
-          git push https://${Pgithub.com/mirdha8846/Git-ops.git main
+          git push
          
       # - name: Checkout target repository
       #   uses: actions/checkout@v4
