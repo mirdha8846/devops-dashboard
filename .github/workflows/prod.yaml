@@ -28,17 +28,17 @@ jobs:
           file: ./app/DOCKERFILE
           push: true
           tags: pankajmirdha/testing:${{ github.sha }}
-      - name: commit to another repo
-        env: 
-         PAT: ${{secrets.PAT}}    
+      - name: Commit to another repo
+        env:
+          PAT: ${{ secrets.PAT }}
         run: |
-          git clone <repo>
-          cd k8s
-          sed -i 's|image:pankajmirdha/testing:.*|image:pankajmirdha/testing:${{github.sha}}|' deployment.yaml
-          git config user.name "Github Action Bot"
+          git clone https://github.com/mirdha8846/Git-ops.git
+          cd Git-ops/k8s
+          sed -i "s|image: pankajmirdha/testing:.*|image: pankajmirdha/testing:${{ github.sha }}|" deployment.yaml
+          git config user.name "GitHub Action Bot"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "update deploment config image tags to ${{ github.sha}}"
+          git commit -m "update deployment config image tag to ${{ github.sha }}"
           git push https://${PAT}@github.com/mirdha8846/Git-ops.git main
          
       # - name: Checkout target repository
