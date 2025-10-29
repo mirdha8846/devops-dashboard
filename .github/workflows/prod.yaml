@@ -40,7 +40,7 @@ jobs:
           git config --global url.https://${PAT}@github.com/.insteadOf https://github.com/              
           git add .
           git commit -m "update deployment config image tag to ${{ github.sha }}"
-          git push origin main
+          git push https://${Pgithub.com/mirdha8846/Git-ops.git main
          
       # - name: Checkout target repository
       #   uses: actions/checkout@v4
