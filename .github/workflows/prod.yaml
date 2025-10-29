@@ -37,9 +37,10 @@ jobs:
           sed -i "s|image: pankajmirdha/testing:.*|image: pankajmirdha/testing:${{ github.sha }}|" deployment.yaml
           git config user.name "GitHub Action Bot"
           git config user.email "actions@github.com"
+          git config --global url."https://x-access-token:${PAT}@github.com/".insteadOf "https://github.com/"
           git add .
           git commit -m "update deployment config image tag to ${{ github.sha }}"
-          git push https://${PAT}@github.com/mirdha8846/Git-ops.git main
+          git push origin main
          
       # - name: Checkout target repository
       #   uses: actions/checkout@v4
