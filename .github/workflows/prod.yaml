@@ -24,8 +24,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: DOCKERFILE
+          context: ./app
+          file: ./app/DOCKERFILE
           push: true
           tags: pankajmirdha/testing:${{ github.sha }}
 
