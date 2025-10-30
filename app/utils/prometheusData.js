@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // Use localhost when running Prometheus locally
-const PROMETHEUS_URL = process.env.PROMETHEUS_URL || "http://localhost:9090";
+const PROMETHEUS_URL = process.env.PROMETHEUS_URL || "http://prometheus-svc:9090";
 
 export async function queryPrometheus(query) {
   try {
