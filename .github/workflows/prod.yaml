@@ -40,21 +40,4 @@ jobs:
           git add .
           git commit -m "update deployment config image tag to ${{ github.sha }}"
           git push
-         
-      # - name: Checkout target repository
-      #   uses: actions/checkout@v4
-      #   with:
-      #     repository: ${{ secrets.TARGET_REPO }}
-      #     token: ${{ secrets.TARGET_REPO_PAT }}
-      #     path: target-repo
-
-      # - name: Update target repo with new image tag and push
-      #   run: |
-      #     IMAGE="${{ secrets.DOCKERHUB_REPO }}:${{ github.sha }}"
-      #     echo "image: $IMAGE" > target-repo/DEPLOYED_IMAGE.txt
-      #     cd target-repo
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
-      #     git add DEPLOYED_IMAGE.txt
-      #     git commit -m "Update deployed image to $IMAGE" || echo "No changes to commit"
-      #     git push
+    
