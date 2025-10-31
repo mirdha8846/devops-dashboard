@@ -18,6 +18,9 @@ app.get("/metrics",async(req,res)=>{
   res.end(await register.metrics())
 })
 
-app.listen(3002,()=>console.log("server is running "))
+// Only start server if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(3002, () => console.log("server is running on port 3002"))
+}
 
 export default app
