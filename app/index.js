@@ -19,3 +19,5 @@ app.get("/metrics",async(req,res)=>{
 })
 
 app.listen(3002,()=>console.log("server is running "))
+
+export default app
