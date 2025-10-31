@@ -2,8 +2,10 @@
 
 A comprehensive monitoring dashboard built with **Node.js** and **Prometheus** for real-time application metrics tracking and visualization.
 
-[![Build Status](https://github.com/mirdha8846/devops-dashboard/workflows/Build%20Docker/badge.svg)](https://github.com/mirdha8846/devops-dashboard/actions)
+[![Build Status](https://github.com/mirdha8846/devops-dashboard/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/mirdha8846/devops-dashboard/actions)
 [![Docker Hub](https://img.shields.io/docker/v/pankajmirdha/testing?label=Docker%20Hub)](https://hub.docker.com/r/pankajmirdha/testing)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/mirdha8846/devops-dashboard)
+[![Jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://jestjs.io/)
 
 ---
 
@@ -18,6 +20,7 @@ A comprehensive monitoring dashboard built with **Node.js** and **Prometheus** f
   - [Local Development](#local-development)
   - [Production Deployment](#production-deployment)
 - [API Endpoints](#api-endpoints)
+- [Testing](#testing)
 - [Monitoring & Metrics](#monitoring--metrics)
 - [CI/CD Pipeline](#cicd-pipeline)
 - [Environment Variables](#environment-variables)
@@ -56,6 +59,7 @@ A comprehensive monitoring dashboard built with **Node.js** and **Prometheus** f
 - **📊 Real-time Metrics Collection**: Track HTTP requests, CPU usage, memory consumption
 - **🔍 Prometheus Integration**: Automatic metric scraping and storage
 - **📈 Custom Metrics**: HTTP request counter, duration histogram, Node.js process metrics
+- **🧪 Automated Testing**: Unit & integration tests using Jest and Supertest
 - **🐳 Docker Ready**: Containerized application with multi-stage builds
 - **🔄 GitOps Workflow**: Automated deployment using ArgoCD/FluxCD
 - **🚀 CI/CD Pipeline**: Automated builds, tests, and deployments via GitHub Actions
@@ -68,6 +72,7 @@ A comprehensive monitoring dashboard built with **Node.js** and **Prometheus** f
 | Category | Technology |
 |----------|-----------|
 | **Backend** | Node.js, Express.js |
+| **Testing** | Jest, Supertest |
 | **Monitoring** | Prometheus, prom-client |
 | **Containerization** | Docker, Docker Compose |
 | **CI/CD** | GitHub Actions |
@@ -84,6 +89,8 @@ devops-dashboard/
 │   └── workflows/
 │       └── prod.yaml              # CI/CD pipeline configuration
 ├── app/                           # Main application directory
+│   ├── __tests__/
+│   │   └── user.test.js           # Jest test suite
 │   ├── controller/
 │   │   └── metric.controller.js   # Prometheus query handlers
 │   ├── middleware/
@@ -95,6 +102,7 @@ devops-dashboard/
 │   │   ├── prometheusClient.js    # Prometheus client setup
 │   │   └── prometheusData.js      # Prometheus query helper
 │   ├── DOCKERFILE                 # Docker build configuration
+│   ├── jest.config.js             # Jest configuration
 │   ├── package.json               # Dependencies
 │   └── index.js                   # Application entry point
 ├── prometheus.yml                 # Prometheus configuration
@@ -157,7 +165,17 @@ npm run dev
 
 **Application running on**: http://localhost:3002
 
-#### 5️⃣ Verify Setup
+#### 5️⃣ Run Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+#### 6️⃣ Verify Setup
 
 - **Metrics Endpoint**: http://localhost:3002/metrics
 - **Prometheus Targets**: http://localhost:9090/targets
@@ -288,6 +306,68 @@ nodejs_heap_size_used_bytes / nodejs_heap_size_total_bytes
 
 ---
 
+## 🧪 Testing
+
+### Test Framework
+
+This project uses **Jest** for unit/integration testing and **Supertest** for HTTP endpoint testing.
+
+### Running Tests
+
+```bash
+cd app
+
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+### Test Coverage
+
+Current test suite includes:
+
+| Test Type | Endpoint | Status |
+|-----------|----------|--------|
+| API Test | `GET /api/login` | ✅ |
+| API Test | `GET /api/products` | ✅ |
+| API Test | `GET /api/orders` | ✅ |
+| Metrics Test | `GET /metrics` | ✅ |
+| Integration Test | Prometheus metrics format | ✅ |
+
+### Test Configuration
+
+**jest.config.js**:
+```javascript
+export default {
+  testEnvironment: 'node',
+  transform: {},
+  testMatch: ['**/__tests__/**/*.js'],
+  forceExit: true,
+  testTimeout: 10000
+};
+```
+
+### Writing Tests
+
+Tests are located in `app/__tests__/` directory:
+
+```javascript
+import request from "supertest"
+import app from "../index.js"
+
+describe("API Testing", () => {
+  it("should return success response", async () => {
+    const res = await request(app).get('/api/login')
+    expect(res.statusCode).toBe(200)
+    expect(res.body.status).toBe('ok')
+  })
+})
+```
+
+---
+
 ## 🔄 CI/CD Pipeline
 
 ### GitHub Actions Workflow
@@ -298,8 +378,8 @@ Located at `.github/workflows/prod.yaml`
 
 ```
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Checkout  │ -> │Docker Build │ -> │  Push to    │ -> │  Update     │
-│    Code     │    │   & Test    │    │ Docker Hub  │    │  GitOps     │
+│   Test      │ -> │Docker Build │ -> │  Push to    │ -> │  Update     │
+│   Suite     │    │   & Push    │    │ Docker Hub  │    │  GitOps     │
 └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
 ```
 
@@ -307,14 +387,20 @@ Located at `.github/workflows/prod.yaml`
 
 Automatically runs on:
 - Push to `main` branch
+- Pull requests to `main` branch
 
 #### Workflow Steps
 
-1. **Checkout Source Code**
+1. **Run Tests** (Jest + Supertest)
+   - Setup Node.js environment
+   - Install dependencies with `npm ci`
+   - Execute test suite
+   - Upload test results as artifacts
 2. **Docker Hub Login** (using secrets)
 3. **Setup Docker Buildx** (for multi-platform builds)
-4. **Build & Push Image** with commit SHA tag
+4. **Build & Push Image** with commit SHA tag (only if tests pass ✅)
 5. **Update GitOps Repository** with new image tag
+6. **Notify** workflow status
 
 #### Required GitHub Secrets
 
@@ -406,9 +492,9 @@ docker build --no-cache -t devops-dashboard ./app
 
 ---
 
-## 🧪 Testing
+## 🧪 Manual Testing
 
-### Manual Testing
+### API Endpoint Testing
 
 ```bash
 # Test metrics endpoint
@@ -487,6 +573,9 @@ This project is licensed under the ISC License.
 git clone https://github.com/mirdha8846/devops-dashboard.git
 cd devops-dashboard/app && npm install
 
+# Run tests (optional but recommended)
+npm test
+
 # Start Prometheus
 docker run -d --name prometheus -p 9090:9090 \
   -v ${PWD}/../prometheus.yml:/etc/prometheus/prometheus.yml \
@@ -499,6 +588,27 @@ npm run dev
 # App: http://localhost:3002
 # Metrics: http://localhost:3002/metrics
 # Prometheus: http://localhost:9090
+```
+
+### 🎯 Development Workflow
+
+```bash
+# 1. Make changes to code
+# 2. Run tests
+npm test
+
+# 3. Test locally
+npm run dev
+
+# 4. Commit and push
+git add .
+git commit -m "your message"
+git push
+
+# 5. GitHub Actions will:
+#    ✅ Run tests automatically
+#    ✅ Build Docker image (if tests pass)
+#    ✅ Deploy to Kubernetes
 ```
 
 ---
