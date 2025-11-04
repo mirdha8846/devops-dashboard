@@ -4,6 +4,8 @@ import metricRoute from "./routes/metric.route.js"
 import fakeRoutes from "./routes/fake.routes.js"
 import { trackRecord } from './middleware/prmo-middlware.js'
 import { register } from './utils/prometheusClient.js'
+import dotenv from 'dotenv'
+dotenv.config()
 const app=express()
 
 app.use(express.json())
@@ -18,9 +20,9 @@ app.get("/metrics",async(req,res)=>{
   res.end(await register.metrics())
 })
 
-// Only start server if not in test environment
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(3002, () => console.log("server is running on port 3002"))
-}
+
+
+app.listen(process.env.APP_PORT, () => console.log("server is running on port 3002"))
+
 
 export default app
