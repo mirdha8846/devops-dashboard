@@ -2,7 +2,7 @@ import axios from 'axios'
 import dotenv from 'dotenv'
 dotenv.config(
    {
-    file:"./secret/.env"
+    path:"./secret/.env"
   }
 )
 // Use localhost when running Prometheus locally

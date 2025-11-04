@@ -7,7 +7,7 @@ import { register } from './utils/prometheusClient.js'
 import dotenv from 'dotenv'
 dotenv.config(
   {
-    file:"./secret/.env"
+    path:"./secret/.env"
   }
 )
 const app=express()
