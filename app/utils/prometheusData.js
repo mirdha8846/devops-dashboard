@@ -1,6 +1,10 @@
 import axios from 'axios'
 import dotenv from 'dotenv'
-dotenv.config()
+dotenv.config(
+   {
+    file:"./secret/.env"
+  }
+)
 // Use localhost when running Prometheus locally
 const PROMETHEUS_URL = process.env.PROMETHEUS_URL || "http://prometheus-svc:9090";
 

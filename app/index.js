@@ -5,7 +5,11 @@ import fakeRoutes from "./routes/fake.routes.js"
 import { trackRecord } from './middleware/prmo-middlware.js'
 import { register } from './utils/prometheusClient.js'
 import dotenv from 'dotenv'
-dotenv.config()
+dotenv.config(
+  {
+    file:"./secret/.env"
+  }
+)
 const app=express()
 
 app.use(express.json())
